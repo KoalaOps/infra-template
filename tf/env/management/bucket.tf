@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "koalaops-terraform-backend"
+    bucket = "PROJECT_NAME-terraform-backend"
     prefix = "terraform/state-management"
   }
 }

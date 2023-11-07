@@ -1,0 +1,9 @@
+cluster_name      = "management-cluster"
+project_id        = "GCP_PROJECT_ID"
+regions = [ "me-west1", "us-east1" ]
+region            = "me-west1"
+location          = "me-west1-a"
+zone              = "me-west1-a"
+node_count        = 4
+machine_type      = "e2-medium"
+image_repo_id     = "PROJECT_NAME-repo"

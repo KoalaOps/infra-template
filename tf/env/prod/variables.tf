@@ -38,15 +38,15 @@ variable "machine_type" {
   description = "Machine type for the nodes"
 }
 
-variable "redis_tier" {
-  type        = string
-  description = "Redis tier, BASIC or STANDARD"
-}
-variable "redis_version" {
-  type        = string
-  description = "Redis version"
-}
-variable "redis_memory_size" {
-  type        = number
-  description = "Redis memory size in GB"
-}
+# variable "redis_tier" {
+#   type        = string
+  # description = "Redis tier, BASIC or STANDARD"
+# }
+# variable "redis_version" {
+#   type        = string
+#   description = "Redis version"
+# }
+# variable "redis_memory_size" {
+#   type        = number
+#   description = "Redis memory size in GB"
+# }

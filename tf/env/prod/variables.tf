@@ -40,7 +40,7 @@ variable "machine_type" {
 
 # variable "redis_tier" {
 #   type        = string
-  # description = "Redis tier, BASIC or STANDARD"
+#   description = "Redis tier, BASIC or STANDARD"
 # }
 # variable "redis_version" {
 #   type        = string

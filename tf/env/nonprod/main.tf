@@ -23,42 +23,14 @@ module "k8s_cluster" {
   install-nginx-ingress            = true
   install-secrets-store-csi-driver = true
 }
-#module "redis" {
-#  source                  = "../../modules/redis"
-#  project_id              = var.project_id
-#  region                  = var.region
-#  tier                    = var.redis_tier
-#  memory_size_gb          = var.redis_memory_size
-#  redis_version           = var.redis_version
-#  authorized_network_name = data.terraform_remote_state.management.outputs.network_name
-#}
 
-
-# # Get credentials for cluster
-# module "gcloud" {
-#   source  = "terraform-google-modules/gcloud/google"
-#   version = "~> 3.0"
-
-#   platform              = "linux"
-#   additional_components = ["kubectl", "beta"]
-
-#   create_cmd_entrypoint = "gcloud"
-#   # Use local variable cluster_name for an implicit dependency on resource "google_container_cluster" 
-#   create_cmd_body = "container clusters get-credentials ${var.cluster_name} --zone=${var.location}"
-# }
-
-# # Apply YAML files for cluster level configurations (ArgoCD, Argo Rollout, ingress-nginx, namespaces, etc)
-# resource "null_resource" "apply_cluster_manifests" {
-#   triggers = {
-#     always_run = "${timestamp()}"
-#   }
-
-#   provisioner "local-exec" {
-#     interpreter = ["bash", "-exc"]
-#     command     = "/bin/bash ../../../k8s-manifests/setup_cluster.sh"
-#   }
-
-#   depends_on = [
-#     module.gcloud
-#   ]
+# Example for adding a Redis instance to the nonprod environment. Uncomment to use (as well as the variables in variables.tf and terraform.tfvars).
+# module "redis" {
+#   source                  = "../../modules/redis"
+#   project_id              = var.project_id
+#   region                  = var.region
+#   tier                    = var.redis_tier
+#   memory_size_gb          = var.redis_memory_size
+#   redis_version           = var.redis_version
+#   authorized_network_name = data.terraform_remote_state.management.outputs.network_name
 # }

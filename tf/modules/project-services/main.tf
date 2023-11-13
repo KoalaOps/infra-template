@@ -6,6 +6,7 @@ locals {
     "cloudprofiler.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "secretmanager.googleapis.com"
+    # "redis.googleapis.com", # Uncomment this line to enable Google Cloud Memorystore for Redis API
   ]
 }
 
@@ -36,7 +37,7 @@ resource "google_project_service" "compute" {
   project            = var.project_id
   service            = "compute.googleapis.com"
   disable_on_destroy = false
-  
+
   # Use count to make this resource conditional
   count = var.enable_apis ? 1 : 0
 }

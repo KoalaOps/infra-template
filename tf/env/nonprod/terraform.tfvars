@@ -1,5 +1,5 @@
 cluster_name  = "nonprod-cluster"
-project_id    = "GCP_PROJECT_ID"
+project_id    = "PROJECT_ID"
 region        = "us-east1"
 location      = "us-east1-b"
 zone          = "us-east1-b"

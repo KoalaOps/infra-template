@@ -1,5 +1,5 @@
 cluster_name  = "management-cluster"
-project_id    = "GCP_PROJECT_ID"
+project_id    = "PROJECT_ID"
 regions       = ["us-east1"]
 region        = "us-east1"
 location      = "us-east1-b"

@@ -24,7 +24,9 @@ Review the `terraform.tfvars` file in each env (e.g. `/tf/env/management/terrafo
 ### Create Bucket in GCS for TF state
 
 ```
-gcloud storage buckets create gs://PROJECT_ID-terraform-backend
+export TF_VAR_project_id=<your project ID>
+gcloud config set project $TF_VAR_project_id
+gcloud storage buckets create gs://$TF_VAR_project_id-terraform-backend
 ```
 
 ### Provision resources

@@ -3,6 +3,11 @@ variable "project_id" {
   description = "The project ID to deploy the cluster in"
 }
 
+variable "project_name" {
+  type        = string
+  description = "The project name"
+}
+
 variable "location" {
   type        = string
   description = "Location of the cluster"
@@ -26,6 +31,7 @@ variable "zone" {
 variable "image_repo_id" {
   type        = string
   description = "The ID of the docker image repository"
+  default     = null
 }
 
 variable "cluster_name" {

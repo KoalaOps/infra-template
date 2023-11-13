@@ -11,7 +11,7 @@ module "project_services" {
 # to allow time for the API to be enabled before creating the image registry.
 resource "null_resource" "wait_for_artifact_registry" {
   triggers = {
-    artifactregistry = module.project_services.artifactregistry
+    artifactregistry = module.project_services.artifactregistry[0].id
   }
 
   # Delay is triggered after the artifact_registry service is created.
@@ -29,7 +29,7 @@ resource "null_resource" "wait_for_artifact_registry" {
 # to allow time for the API to be enabled before creating the network.
 resource "null_resource" "wait_for_compute" {
   triggers = {
-    compute = module.project_services.compute
+    compute = module.project_services.compute[0].id
   }
 
   # Delay is triggered after the compute service is created.

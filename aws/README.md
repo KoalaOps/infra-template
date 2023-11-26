@@ -67,7 +67,7 @@ Configure the following fields:
 * region: "REGION_CODE" (Choose your cluster's region, e.g., us-east-1)
 
 ### Run setup
-Go into the **eks** folder inside the folder of your chosen cluster setup, and run the following command to run the terraform setup of your cluster:
+Go into the **eks** folder inside the folder of your chosen cluster setup, and apply the following command to run the terraform setup of your cluster:
 ```bash
 terragrunt run-all apply
 ```

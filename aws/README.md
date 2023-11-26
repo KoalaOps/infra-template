@@ -1,63 +1,110 @@
+# AWS Terraform k8s Setup Instructions
 
-Before starting, make sure you complete the following:
-To access AWS services with the AWS CLI, you need an AWS account and IAM credentials. When running AWS CLI commands, the AWS CLI needs to have access to those AWS credentials. To increase the security of your AWS account, we recommend that you do not use your root account credentials. You should create a user with least privilege to provide access credentials to the tasks you'll be running in AWS.
+## AWS CLI Setup
 
-https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html
+To access AWS services with the AWS CLI, you need an AWS account and IAM credentials. Ensure you have the following prerequisites in place:
 
+- [AWS CLI Version 2 Prerequisites](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html)
 
+Install the AWS CLI:
 
-Install AWS CLI
-https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+- [AWS CLI Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
+#### Authenticate the CLI with your AWS credentials or through SSO:
 
-To confirm aws access:
-aws sts get-caller-identity
-Or
-aws iam get-user
+```bash
+aws configure
+# or
+aws configure sso
+```
 
-In somecases your AWS cli profile isn't default:
-Error: Unable to locate credentials. You can configure credentials by running "aws configure"
+#### Set Your AWS Profile Name
 
-run with specific profile name:
+To determine your AWS profile name, run the following command:
+
+```bash
+aws configure list-profiles
+```
+
+Using the profile name, define your AWS Profile:
+
+```bash
 aws sts get-caller-identity --profile YOUR_PROFILE_NAME
+```
 
-In somecases the problem is an expired token or bad credentials:
-error: Error when retrieving token from sso: Token has expired and refresh failed
+### Terraform and Terragrunt Installation
 
-Action to login (Don't forget to specify profile name in case you need to):
-Do you have SSO? aws sso login 
-Regular login? aws login
+If you haven't installed Terraform and Terragrunt yet, follow these steps:
 
-# Run all terragrunt or terrafrom
+#### Install Terraform
+```bash
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+```
+
+#### Install Terragrunt
+```bash
+brew install terragrunt
+```
+
+### Cluster Configuration
+There are two predefined cluster setups available:
+
+#### Multi Cluster
+
+Creates three Kubernetes clusters for prod, non-prod, and management. This setup is recommended for best practices. To set up a multi-cluster, use the "multi-cluster-setup" folder.
+
+#### Single Cluster
+Creates only one Kubernetes cluster, which is recommended for demos and lean setups. To set up a single cluster, use the "single-cluster-setup" folder.
+
+### Configuration Settings
+
+In both the "multi-cluster-setup" and "single-cluster-setup" folders, you'll find a YAML file called common_vars.yaml. Configure the following fields within that file for your chosen cluster setup:
+
+Configure the following fields:
+* project_name: "PROJECT_NAME" (Choose any name)
+* profile: "PROFILE_NAME" (Run `aws configure list-profiles` to fetch your AWS profile)
+* region: "REGION_CODE" (Choose your cluster's region, e.g., us-east-1)
+
+### Run setup
+Go into the **eks** folder inside the folder of your chosen cluster setup, and run the following command to run the terraform setup of your cluster:
+```bash
 terragrunt run-all apply
+```
+The command may take between 15-30 minutes to complete, depending on your cluster configuration.
+
+### Kubectl
+After terragrunt is finished successfully, to install `kubectl` and enable local `kubectl` access to your AWS EKS cluster:
+
+```bash
+aws eks update-kubeconfig --region REGION_CODE --name PROJECT_NAME --profile YOUR_PROFILE_NAME
+```
+Make sure to replace REGION_CODE, PROJECT_NAME, and YOUR_PROFILE_NAME with your specific values that were used in your YAML file.
 
 
-AFTER CREATION
-To allow local kubectl to login
-aws eks update-kubeconfig --region region-code --name THE_CLUSTER_NAME
+##Github Actions Setup (To allow pushing images into the aws image repo):
 
-Run the following:
-# Set your AWS region and EKS cluster name
+## Set your AWS region and EKS cluster name
 AWS_REGION="your-aws-region"
 EKS_CLUSTER_NAME="your-eks-cluster-name"
 
-# Set IAM user name
+## Set IAM user name
 IAM_USER_NAME="your-iam-username"
 
-# Create an IAM user
+## Create an IAM user
 echo "Creating IAM user..."
 aws iam create-user --user-name $IAM_USER_NAME
 
-# Attach policies for ECR and EKS
+## Attach policies for ECR and EKS
 echo "Attaching policies to IAM user..."
 aws iam attach-user-policy --user-name $IAM_USER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
 aws iam attach-user-policy --user-name $IAM_USER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
 
-# Create access key for the user
+## Create access key for the user
 echo "Creating access key..."
 credentials=$(aws iam create-access-key --user-name $IAM_USER_NAME)
 
-# Extract access key and secret key
+## Extract access key and secret key
 echo "Put the following secrets in github organization"
 access_key=$(echo $credentials | jq -r '.AccessKey.AccessKeyId')
 secret_key=$(echo $credentials | jq -r '.AccessKey.SecretAccessKey')

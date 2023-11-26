@@ -1,0 +1,4 @@
+project_name: "eyal-startup"
+profile: "AdministratorAccess-182885424439"
+region: "us-east-1"
+tf_state_bucket: "eyal-startup-tf-state"

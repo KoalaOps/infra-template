@@ -1,0 +1,14 @@
+project_name: "eyal-startup"
+profile: "AdministratorAccess-182885424439"
+region: "us-east-1"
+tf_state_bucket: "eyal-startup-tf-state"
+# cloud_auth:
+#   myAwsAccount:
+#     provider: aws
+#     profile: "AdministratorAccess-182885424439"
+#     region: "us-east-1"
+# clusters:
+#   myCluster:
+#     auth: myAwsAccount
+#     cluster_name: "myCluster"
+    

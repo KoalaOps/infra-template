@@ -26,7 +26,7 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket                = local.common_vars.tf_state_bucket
+    bucket                = local.common_vars.tf_state_bucket != null ? local.common_vars.tf_state_bucket : local.common_vars.project_name + "-tf-state"
     disable_bucket_update = true
     key                   = "${path_relative_to_include()}/terraform.tfstate"
     region                = local.common_vars.region

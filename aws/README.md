@@ -135,6 +135,7 @@ credentials=$(aws iam create-access-key --user-name $IAM_USER_NAME)
 echo "Put the following secrets in github organization"
 access_key=$(echo $credentials | jq -r '.AccessKey.AccessKeyId')
 secret_key=$(echo $credentials | jq -r '.AccessKey.SecretAccessKey')
+```
 
 OR without jq
 {
@@ -153,5 +154,3 @@ https://github.com/organizations/[OrganizationName]/settings/secrets/actions/new
 
 AWS_ACCESS_KEY_ID=AccessKeyId
 AWS_SECRET_ACCESS_KEY=SecretAccessKey
-
-```

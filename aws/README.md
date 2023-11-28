@@ -37,12 +37,15 @@ To allow local kubectl to login
 aws eks update-kubeconfig --region region-code --name THE_CLUSTER_NAME
 
 Run the following:
+project_name: "eyal-startup"
+profile: "AdministratorAccess-182885424439"
+region: "us-east-1"
 # Set your AWS region and EKS cluster name
-AWS_REGION="your-aws-region"
-EKS_CLUSTER_NAME="your-eks-cluster-name"
+AWS_REGION="us-east-1"
+EKS_CLUSTER_NAME="eyal-startup"
 
 # Set IAM user name
-IAM_USER_NAME="your-iam-username"
+IAM_USER_NAME="github-actions"
 
 # Create an IAM user
 echo "Creating IAM user..."
@@ -51,7 +54,21 @@ aws iam create-user --user-name $IAM_USER_NAME
 # Attach policies for ECR and EKS
 echo "Attaching policies to IAM user..."
 aws iam attach-user-policy --user-name $IAM_USER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
-aws iam attach-user-policy --user-name $IAM_USER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+aws iam put-user-policy --user-name $IAM_USER_NAME --policy-name EKSKoalaAccessV1 --policy-document '{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "eks:AccessKubernetesApi",
+                "eks:Describe*",
+                "eks:List*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}'
+
 
 # Create access key for the user
 echo "Creating access key..."
@@ -61,4 +78,22 @@ credentials=$(aws iam create-access-key --user-name $IAM_USER_NAME)
 echo "Put the following secrets in github organization"
 access_key=$(echo $credentials | jq -r '.AccessKey.AccessKeyId')
 secret_key=$(echo $credentials | jq -r '.AccessKey.SecretAccessKey')
+
+OR without jq
+{
+    "AccessKey": {
+        "UserName": "github-actions",
+        "AccessKeyId": "THE-KEY",
+        "Status": "Active",
+        "SecretAccessKey": "SECRET",
+        "CreateDate": "2023-11-26T21:32:50+00:00"
+    }
+}
+
+Define github secrets at: 
+Replace with your OrganizationName
+https://github.com/organizations/[OrganizationName]/settings/secrets/actions/new
+
+AWS_ACCESS_KEY_ID=THE-KEY
+AWS_SECRET_ACCESS_KEY=SECRET
 

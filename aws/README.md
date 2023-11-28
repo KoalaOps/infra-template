@@ -89,17 +89,23 @@ project_name: "eyal-startup"
 profile: "AdministratorAccess-182885424439"
 region: "us-east-1"
 ## Set your AWS region and EKS cluster name
+```bash
 AWS_REGION="us-east-1"
 EKS_CLUSTER_NAME="eyal-startup"
+```
 
 ## Set IAM user name
+```bash
 IAM_USER_NAME="github-actions"
-
+```
 ## Create an IAM user
+```bash
 echo "Creating IAM user..."
 aws iam create-user --user-name $IAM_USER_NAME
+```
 
 ## Attach policies for ECR and EKS
+```bash
 echo "Attaching policies to IAM user..."
 aws iam attach-user-policy --user-name $IAM_USER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
 aws iam put-user-policy --user-name $IAM_USER_NAME --policy-name EKSKoalaAccessV1 --policy-document '{
@@ -116,13 +122,16 @@ aws iam put-user-policy --user-name $IAM_USER_NAME --policy-name EKSKoalaAccessV
         }
     ]
 }'
+```
 
 
 ## Create access key for the user
+```bash
 echo "Creating access key..."
 credentials=$(aws iam create-access-key --user-name $IAM_USER_NAME)
-
+```
 ## Extract access key and secret key
+```bash
 echo "Put the following secrets in github organization"
 access_key=$(echo $credentials | jq -r '.AccessKey.AccessKeyId')
 secret_key=$(echo $credentials | jq -r '.AccessKey.SecretAccessKey')
@@ -145,3 +154,4 @@ https://github.com/organizations/[OrganizationName]/settings/secrets/actions/new
 AWS_ACCESS_KEY_ID=AccessKeyId
 AWS_SECRET_ACCESS_KEY=SecretAccessKey
 
+```

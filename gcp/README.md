@@ -1,4 +1,4 @@
-# AWS Terraform k8s Setup Instructions
+# GCP Terraform k8s Setup Instructions
 
 ### Getting started
 

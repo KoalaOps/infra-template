@@ -1,3 +1,4 @@
 project_name: "YOU_PROJECT_NAME"
+tf_state_bucket: "TF_STATE_BUCKET"
 profile: "YOUR_PROFILE_NAME"
-region: "us-east-1"
+region: "REGION_CODE"

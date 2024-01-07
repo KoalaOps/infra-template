@@ -63,6 +63,7 @@ In both the "multi-cluster-setup" and "single-cluster-setup" folders, you'll fin
 
 Configure the following fields:
 * project_name: "PROJECT_NAME" (Choose any name)
+* tf_state_bucket: "TF_STATE_BUCKET" (Choose any name)
 * profile: "PROFILE_NAME" (Run `aws configure list-profiles` to fetch your AWS profile)
 * region: "REGION_CODE" (Choose your cluster's region, e.g., us-east-1)
 

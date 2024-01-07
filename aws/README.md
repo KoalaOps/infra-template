@@ -87,9 +87,11 @@ The following instructions will allow Github actions to push images into the AWS
 
 ### Set your AWS region and IAM user name
 ```bash
-AWS_REGION="us-east-1"
+AWS_REGION="REGION_CODE"
 IAM_USER_NAME="github-actions"
+AWS_PROFILE="YOUR_PROFILE_NAME"
 ```
+Make sure to replace REGION_CODE, and YOUR_PROFILE_NAME with your specific values that were used in your YAML file.
 
 ### Create an IAM user
 ```bash
@@ -100,8 +102,8 @@ aws iam create-user --user-name $IAM_USER_NAME
 ### Attach policies for ECR and EKS
 ```bash
 echo "Attaching policies to IAM user..."
-aws iam attach-user-policy --user-name $IAM_USER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
-aws iam put-user-policy --user-name $IAM_USER_NAME --policy-name EKSKoalaAccessV1 --policy-document '{
+aws iam attach-user-policy --user-name $IAM_USER_NAME --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess --profile $AWS_PROFILE
+aws iam put-user-policy --user-name $IAM_USER_NAME --policy-name EKSKoalaAccessV1 --profile $AWS_PROFILE --policy-document '{
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -120,7 +122,7 @@ aws iam put-user-policy --user-name $IAM_USER_NAME --policy-name EKSKoalaAccessV
 ### Create an access key for the user
 ```bash
 echo "Creating access key..."
-credentials=$(aws iam create-access-key --user-name $IAM_USER_NAME)
+credentials=$(aws iam create-access-key --profile $AWS_PROFILE --user-name $IAM_USER_NAME)
 ```
 
 ### Extract access key and secret key

@@ -88,8 +88,8 @@ The following instructions will allow Github actions to push images into the AWS
 ### Set your AWS region and IAM user name
 ```bash
 AWS_REGION="REGION_CODE"
-IAM_USER_NAME="github-actions"
 AWS_PROFILE="YOUR_PROFILE_NAME"
+IAM_USER_NAME="github-actions"
 ```
 Make sure to replace REGION_CODE, and YOUR_PROFILE_NAME with your specific values that were used in your YAML file.
 

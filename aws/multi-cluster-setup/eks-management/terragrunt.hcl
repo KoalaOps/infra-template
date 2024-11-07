@@ -17,7 +17,7 @@ dependencies {
 }
 
 inputs = {
-  cluster_name = format("%s-%s-management",  local.common_vars.cluster_name , local.common_vars.region)
+  cluster_name = "${local.common_vars.project_name}-${local.common_vars.region}-management"
   network = dependency.network.outputs.network_id
   subnet = dependency.network.outputs.private_subnets
   node_tag =  local.common_vars.project_name

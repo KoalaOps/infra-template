@@ -1,0 +1,6 @@
+project_name: "YOUR_PROJECT_NAME"
+project_id: "YOUR_PROJECT_ID"
+project_resource_prefix: "YOUR_PROJECT_RESOURCE_PREFIX_THAT_WILL_BE_USED_FOR_ALL_RESOURCES"
+tf_state_bucket: "YOUR_TF_STATE_BUCKET"
+primary_location: "YOUR_PRIMARY_LOCATION"
+locations: ["YOUR_PRIMARY_LOCATION", "YOUR_SECONDARY_LOCATION"]

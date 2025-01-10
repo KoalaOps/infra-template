@@ -23,9 +23,16 @@ variable "subnet" {
   description = "The VPC subnet name"
 }
 
-variable "node_count" {
+variable "min_node_count" {
   type        = number
-  description = "Number of nodes in the cluster"
+  description = "Minimum number of nodes per zone in the node pool. Must be >=0 and <= max_node_count. Cannot be used with total limits."
+  default = 1
+}
+
+variable "max_node_count" {
+  type        = number
+  description = "Maximum number of nodes per zone in the node pool. Must be >= min_node_count. Cannot be used with total limits."
+  default = 2
 }
 
 variable "machine_type" {

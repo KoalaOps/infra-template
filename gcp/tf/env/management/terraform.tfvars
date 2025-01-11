@@ -1,11 +1,11 @@
 # You can provide the project_id and project_name here, 
 # or by setting the env variables TF_VAR_project_id and TF_VAR_project_name.
 # 
-project_id   = "PROJECT_ID"
-project_name = "PROJECT_NAME"
+project_id   = "nadav-test-405022"
+project_name = "nadav-test"
 
 # Default image repo id is the project name with "-repo" appended. You can override it here.
-# image_repo_id = "PROJECT_NAME-repo"
+# image_repo_id = "nadav-test-repo"
 
 cluster_name = "management-cluster"
 regions      = ["us-east1"]

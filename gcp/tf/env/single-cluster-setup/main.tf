@@ -2,8 +2,8 @@
 
 locals {
     // Use the ternary operator to check if cluster_name is set. If not, use project_name with '-cluster' suffix.
-  effective_cluster_name = var.cluster_name != "" ? var.cluster_name : "${var.project_name}-cluster"
-  effective_image_repo_id  = var.image_repo_id != "" ? var.image_repo_id : "${var.project_name}-repo"
+  effective_cluster_name = var.cluster_name != null ? var.cluster_name : "${var.project_name}-cluster"
+  effective_image_repo_id  = var.image_repo_id != null ? var.image_repo_id : "${var.project_name}-repo"
 }
 
 module "project_services" {

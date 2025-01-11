@@ -1,7 +1,7 @@
 # You can provide the project_id and project_name here, 
 # or by setting the env variables TF_VAR_project_id and TF_VAR_project_name.
 # 
-project_id = "PROJECT_ID"
+project_id = "nadav-test-405022"
 
 cluster_name = "nonprod-cluster"
 region       = "us-east1"

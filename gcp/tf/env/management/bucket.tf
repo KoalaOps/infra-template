@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "PROJECT_ID-terraform-backend"
+    bucket = "nadav-test-405022-terraform-backend"
     prefix = "terraform/state-management"
   }
 }

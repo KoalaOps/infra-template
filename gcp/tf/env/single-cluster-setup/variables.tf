@@ -31,11 +31,13 @@ variable "zone" {
 variable "image_repo_id" {
   type        = string
   description = "The ID of the docker image repository"
+  default     = null
 }
 
 variable "cluster_name" {
   type        = string
   description = "Name given to the new cluster"
+  default     = null
 }
 
 variable "node_count" {

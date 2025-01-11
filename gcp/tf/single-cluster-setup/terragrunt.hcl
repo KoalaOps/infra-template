@@ -1,6 +1,9 @@
 # Indicate the input values to use for the variables of the module.
 locals {
-    common_vars = yamldecode(file("./common_vars.yaml"))
+  common_vars = yamldecode(file("./common_vars.yaml"))
+  # Validate project_resource_prefix ends with letter or digit
+  prefix_validation = regex("^.*[A-Za-z0-9]$", local.common_vars.project_resource_prefix) != null ? null : file("ERROR: project_resource_prefix must end with a letter or number")
+  effective_state_name = try(local.common_vars.tf_state_bucket, "${local.common_vars.project_resource_prefix}-tf-state")
 }
 
 generate "common_vars" {
@@ -28,7 +31,7 @@ remote_state {
   config = {
     project               = local.common_vars.project_id
     location              = local.common_vars.primary_location
-    bucket                = "${local.common_vars.project_name}-tf-state"
+    bucket                = local.effective_state_name
     prefix                  = "${path_relative_to_include()}/terraform.tfstate"
   }
 }

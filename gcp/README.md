@@ -1,58 +1,79 @@
 # GCP Terraform k8s Setup Instructions
 
-### Getting started
+## GCP CLI Setup
 
-1. Copy `tf` dir
-2. Find-and-replace PROJECT_NAME with whatever you want
-3. Find-and-replace PROJECT_ID with the exact project ID (not name, in case they are different) where you want the resources to be created.
+To access GCP services with the gcloud CLI, you need a GCP account and credentials. Ensure you have the following prerequisites in place:
 
+- [Google Cloud SDK Prerequisites](https://cloud.google.com/sdk/docs/install)
 
-### Review resources in each env
+Install the Google Cloud SDK:
 
-For a proper production setup it is considered best practice to separate production and non-production workloads, as well as the "control plane" or "management" cluster.
+- [Google Cloud SDK Installation Guide](https://cloud.google.com/sdk/docs/install-sdk)
 
-Therefore, by default we create a single prod cluster, single non-prod cluster (any environment such as dev, staging etc will be here), and a management cluster.
+#### Authenticate the CLI:
 
-However, for a simpler setup or if you just want to test things before deploying a full production setup,
-you can instead create a single cluster which will contain both management-related workloads and any of your own workloads.
-To do so simply ignore the `management` `nonprod` and `prod` dirs and use the `single-cluster-setup` dir.
+```bash
+gcloud auth login
+gcloud auth application-default login
+```
 
-Review the `terraform.tfvars` file in each env (e.g. `/tf/env/management/terraform.tfvars`), starting with the management env which also provisions shared resources such as network, image registry etc.
+### Terraform and Terragrunt Installation
+
+If you haven't installed Terraform and Terragrunt yet, follow these steps:
+
+#### Install Terraform
+```bash
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+```
+
+#### Install Terragrunt
+```bash
+brew install terragrunt
+```
+
+### Cluster Configuration
+There are two predefined cluster setups available:
+
+#### Multi Cluster
+
+Creates three Kubernetes clusters for prod, non-prod, and management. This setup is recommended for best practices. To set up a multi-cluster, use the "multi-cluster-setup" folder.
+
+#### Single Cluster
+Creates only one Kubernetes cluster, which is recommended for demos and lean setups. To set up a single cluster, use the "single-cluster-setup" folder.
+
+### Configuration Settings
+
+In both the "multi-cluster-setup" and "single-cluster-setup" folders, you'll find a YAML file called common_vars.yaml. Configure the following fields within that file for your chosen cluster setup:
+
+Configure the following fields:
+* project_id: "YOUR_PROJECT_ID"
+* project_resource_prefix: "YOUR_PROJECT_RESOURCE_PREFIX_THAT_WILL_BE_USED_FOR_ALL_RESOURCES"
+* tf_state_bucket: "YOUR_TF_STATE_BUCKET"
+* primary_location: "YOUR_PRIMARY_LOCATION"
+* locations: ["YOUR_PRIMARY_LOCATION", "YOUR_SECONDARY_LOCATION"]
 
 ### Create Bucket in GCS for TF state
 
-```
-export TF_VAR_project_id=<your project ID>
-gcloud config set project $TF_VAR_project_id
-gcloud storage buckets create gs://$TF_VAR_project_id-terraform-backend
-```
-
-### Provision resources
-
-<!-- Important notice -->
-Important: GCP can take a minute or two to enable an API for a project for the first time. If you see errors such as:
-    
-    ```Error creating Repository: googleapi: Error 403: Artifact Registry API has not been used in project my-test-project-404509 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/artifactregistry.googleapis.com/overview?project=my-test-project-404509 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.```
-
-Then simply wait a minute and re-run the `terraform apply` command.
-
-Start with the management cluster:
-
-```shell
-cd tf/env/management
-terraform init
-terraform apply
+```bash
+export PROJECT_ID=<your project ID>
+gcloud config set project $PROJECT_ID
+gcloud storage buckets create gs://$PROJECT_ID-terraform-backend
 ```
 
-Continue with nonprod and prod clusters:
-```shell
-cd tf/env/nonprod
-terraform init
-terraform apply
+### Run setup
+Go into the **gcp/tf** folder inside the folder of your chosen cluster setup, and apply the following command to run the terraform setup of your cluster, example:
+```bash
+cd gcp/tf/multi-cluster-setup # in case of multi-cluster-setup
 ```
+To provision your clusters and infrastructure, run the following command:
+```base
+terragrunt run-all apply
+```
+The command may take between 15-30 minutes to complete, depending on your cluster configuration.
 
-```shell
-cd tf/env/prod
-terraform init
-terraform apply
-```
+> **Important**: GCP can take a minute or two to enable an API for a project for the first time. If you see errors about APIs not being enabled, wait a minute and re-run the `terragrunt run-all apply` command.
+
+### Run the cluster setup
+After terragrunt is finished successfully, please visit [https://docs.koalaops.com/getting-started/basic-setup](https://docs.koalaops.com/getting-started/basic-setup) to continue with setting up your cluster.
+

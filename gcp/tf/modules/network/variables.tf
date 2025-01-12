@@ -1,6 +1,9 @@
-variable "project_id" {
+variable "primary_location" {
     type        = string
 }
-variable "regions" {
+variable "locations" {
     type        = list(string)
+}
+variable "project_resource_prefix" {
+    type        = string
 }

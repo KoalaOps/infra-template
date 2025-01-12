@@ -39,3 +39,9 @@ variable "machine_type" {
   type        = string
   description = "Machine type for the nodes"
 }
+
+variable "enable_autopilot" {
+  description = "Enable Autopilot for this cluster"
+  type        = bool
+  default     = false
+}

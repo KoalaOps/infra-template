@@ -25,4 +25,5 @@ inputs = {
   min_node_count = 1
   max_node_count = 3
   machine_type = "e2-standard-2"
+  enable_autopilot = try(local.common_vars.enable_autopilot, true)
 }

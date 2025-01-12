@@ -19,6 +19,7 @@ inputs = {
   project_id = local.common_vars.project_id
   project_resource_prefix = local.common_vars.project_resource_prefix
   location = local.common_vars.primary_location
+  enable_autopilot = try(local.common_vars.enable_autopilot, true)
   name = local.effective_cluster_name
   network = dependency.network.outputs.network_name
   subnet = dependency.network.outputs.subnet_names[local.common_vars.primary_location]

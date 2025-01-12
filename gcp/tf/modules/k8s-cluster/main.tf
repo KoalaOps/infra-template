@@ -8,15 +8,16 @@ resource "google_container_cluster" "main" {
   name     = var.name
   location = var.location
   # Workload Identity is a feature that allows you to associate a Kubernetes service account with a Google Cloud service account.
-  # We need to enable Workload Identity on the cluster in order to use the Secret Store CSI Driver Provider for GCP.
+  # This is highly recommended, as it allows for more secure and flexible authentication and authorization, for example
+  # to manage access to Google Cloud resources from within the cluster.
   # https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
   # https://cloud.google.com/secret-manager/docs/using-other-products#google-kubernetes-engine
   workload_identity_config {
     workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
   }
 
-  # We can't create a cluster with no node pool defined, but we want to only use
-  # separately managed node pools. So we create the smallest possible default
+  # We want to separately manage the node pool(s) for more control over the nodes.
+  # We can't create a cluster with no node pool defined, so we create the smallest possible default
   # node pool and immediately delete it.
   remove_default_node_pool = true
   initial_node_count       = 1
@@ -51,9 +52,9 @@ resource "google_container_node_pool" "primary_nodes" {
 
   node_config {
     oauth_scopes = [
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/logging.write", // Enable Google Cloud Logging
+      "https://www.googleapis.com/auth/monitoring", // Enable Google Cloud Monitoring
+      "https://www.googleapis.com/auth/cloud-platform" // Enable Google Cloud Platform API, so that nodes can access Google Cloud services
     ]
 
     labels = {

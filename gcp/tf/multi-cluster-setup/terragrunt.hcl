@@ -12,7 +12,7 @@ generate "common_vars" {
   # the following variables will be pushed to all modules
   contents  = <<EOF
 variable "project_id" {
-    description = "project id"
+  description = "project id"
 }
 
 provider "google" {
@@ -40,7 +40,7 @@ inputs = {
   location = local.common_vars.primary_location
 }
 
-# creates environment variables so that modules with matching variable names can automatically read these values
+# Creates environment variables so that modules with matching variable names can automatically read these values
 terraform {
   extra_arguments "common_vars" {
     commands = get_terraform_commands_that_need_vars()
@@ -49,4 +49,22 @@ terraform {
         TF_VAR_project_id = local.common_vars.project_id
     }
   }
+}
+
+# Global dependencies configuration
+dependencies {
+  paths = get_terragrunt_dir() != "${get_parent_terragrunt_dir()}/project-services" ? ["../project-services"] : []
+}
+
+dependency "project-services" {
+  config_path = "../project-services"
+  skip_outputs = true
+  
+  mock_outputs = {
+    enabled_apis = []
+  }
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+  
+  # Don't create dependency for project-services itself
+  enabled = get_terragrunt_dir() != "${get_parent_terragrunt_dir()}/project-services"
 }

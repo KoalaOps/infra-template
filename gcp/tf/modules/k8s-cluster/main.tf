@@ -7,20 +7,29 @@ data "google_project" "project" {
 resource "google_container_cluster" "main" {
   name     = var.name
   location = var.location
+# Enable Autopilot mode if specified
+  enable_autopilot = var.enable_autopilot
+
+  # The following configurations only apply to Standard clusters
   # Workload Identity is a feature that allows you to associate a Kubernetes service account with a Google Cloud service account.
   # This is highly recommended, as it allows for more secure and flexible authentication and authorization, for example
   # to manage access to Google Cloud resources from within the cluster.
   # https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
   # https://cloud.google.com/secret-manager/docs/using-other-products#google-kubernetes-engine
-  workload_identity_config {
-    workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
+  dynamic "workload_identity_config" {
+    for_each = var.enable_autopilot ? [] : [1]
+    content {
+      workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
+    }
   }
+
 
   # We want to separately manage the node pool(s) for more control over the nodes.
   # We can't create a cluster with no node pool defined, so we create the smallest possible default
   # node pool and immediately delete it.
-  remove_default_node_pool = true
-  initial_node_count       = 1
+  # Only set these for Standard clusters
+  remove_default_node_pool = var.enable_autopilot ? null : true
+  initial_node_count       = var.enable_autopilot ? null : 1
 
   network    = var.network
   subnetwork = var.subnet
@@ -45,6 +54,7 @@ resource "google_container_cluster" "main" {
 
 # Separately Managed Node Pool
 resource "google_container_node_pool" "primary_nodes" {
+  count    = var.enable_autopilot ? 0 : 1
   name       = google_container_cluster.main.name
   location   = var.location
   cluster    = google_container_cluster.main.name

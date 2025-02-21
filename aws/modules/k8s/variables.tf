@@ -1,5 +1,3 @@
-
-
 variable "cluster_name" {
   type        = string
   description = "Name given to the new cluster"
@@ -14,7 +12,6 @@ variable "subnet" {
   type        = list(string)
   description = "The VPC subnet name"
 }
-
 
 variable "node_groups" {
   type        = any
@@ -35,4 +32,16 @@ variable "node_groups" {
 variable "node_tag" {
   type        = string
   description = "Machine tag for nodes"
+}
+
+variable "allow_management_cluster_access" {
+  type        = bool
+  description = "Whether to allow access from management cluster security group"
+  default     = true
+}
+
+variable "management_cluster_sg_id" {
+  type        = string
+  description = "Security group ID of the management cluster"
+  default     = ""
 }

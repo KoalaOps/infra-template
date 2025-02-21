@@ -1,3 +1,5 @@
-project_name: "YOU_PROJECT_NAME"
+project_name: "YOUR_PROJECT_NAME"
 profile: "YOUR_PROFILE_NAME"
-region: "us-east-1"
+region: "YOUR_AWS_REGION"
+account_id: "YOUR_AWS_ACCOUNT_ID"
+enable_argocd: true

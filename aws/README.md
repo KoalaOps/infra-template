@@ -67,6 +67,93 @@ Configure the following fields:
 * profile: "PROFILE_NAME" (Run `aws configure list-profiles` to fetch your AWS profile)
 * region: "REGION_CODE" (Choose your cluster's region, e.g., us-east-1)
 
+### Node Group Configuration
+
+The EKS clusters are configured with production-ready node groups by default. Here's what you need to know:
+
+#### Default Configuration
+- **Minimum nodes**: 2 (ensures high availability)
+- **Desired nodes**: 2-3 (depending on environment)
+- **Maximum nodes**: 6-20 (depending on environment)
+- **Instance types**: t3.medium to t3.large (depending on environment)
+- **Capacity type**: ON_DEMAND (SPOT for nonprod to save costs)
+
+#### Environment-Specific Defaults
+- **Management cluster**: 2-6 nodes, t3.medium, ON_DEMAND
+- **Production cluster**: 3-20 nodes, t3.large, ON_DEMAND
+- **Non-production cluster**: 2-10 nodes, t3.medium, SPOT (cost-optimized, minimum 2 for testing multiple services)
+
+#### Customizing Node Groups
+
+You can customize the node group configuration in your terragrunt.hcl files:
+
+**Option 1: Override default values for all node groups**
+```hcl
+inputs = {
+  # ... other inputs ...
+  
+  # Customize defaults
+  default_desired_capacity = 3
+  default_min_capacity = 2
+  default_max_capacity = 15
+  default_instance_types = ["t3.large", "t3.xlarge"]
+  default_capacity_type = "ON_DEMAND"
+}
+```
+
+**Option 2: Define custom node groups**
+```hcl
+inputs = {
+  # ... other inputs ...
+  
+  node_groups = {
+    primary = {
+      desired_capacity = 3
+      min_capacity     = 2
+      max_capacity     = 15
+      instance_types   = ["t3.large", "t3.xlarge"]
+      capacity_type    = "ON_DEMAND"
+      tags = {
+        Environment = "production"
+        Team        = "platform"
+      }
+    }
+    spot_workers = {
+      desired_capacity = 2
+      min_capacity     = 0
+      max_capacity     = 10
+      instance_types   = ["t3.large", "t3.xlarge", "m5.large"]
+      capacity_type    = "SPOT"
+      tags = {
+        Environment = "production"
+        WorkloadType = "batch-processing"
+      }
+    }
+  }
+}
+```
+
+#### Node Group Configuration Options
+
+- **desired_capacity**: Number of nodes to maintain
+- **min_capacity**: Minimum number of nodes (minimum 2 recommended for HA and testing multiple services)
+- **max_capacity**: Maximum number of nodes for auto-scaling
+- **instance_type**: Single instance type (e.g., "t3.medium")
+- **instance_types**: List of instance types for mixed instances
+- **capacity_type**: "ON_DEMAND" or "SPOT"
+- **ami_type**: AMI type (default: "AL2_x86_64")
+- **max_unavailable**: Max nodes unavailable during updates (default: 1)
+- **tags**: Custom tags for the node group
+- **name**: Custom name for the node group
+
+#### Best Practices
+
+1. **High Availability**: Use minimum 2 nodes for production workloads
+2. **Cost Optimization**: Use SPOT instances for non-production environments
+3. **Mixed Instance Types**: Specify multiple instance types for better availability
+4. **Auto-scaling**: Set appropriate max_capacity based on your workload requirements
+5. **Tagging**: Use consistent tags for cost tracking and resource management
+
 ### Run setup
 Go into the **eks** folder inside the folder of your chosen cluster setup, and apply the following command to run the terraform setup of your cluster:
 ```bash

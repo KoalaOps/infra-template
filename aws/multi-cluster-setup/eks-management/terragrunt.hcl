@@ -22,4 +22,25 @@ inputs = {
   network = dependency.network.outputs.network_id
   subnet = dependency.network.outputs.private_subnets
   node_tag = local.common_vars.project_name
+  
+  # Management cluster configuration - optimized for management tools like ArgoCD
+  default_desired_capacity = 2
+  default_min_capacity = 2
+  default_max_capacity = 6
+  default_instance_types = ["t3.medium"]
+  
+  # Optional: Customize node groups for management workloads
+  # node_groups = {
+  #   management = {
+  #     desired_capacity = 2
+  #     min_capacity     = 2
+  #     max_capacity     = 6
+  #     instance_type    = "t3.medium"
+  #     capacity_type    = "ON_DEMAND"  # Use ON_DEMAND for management services
+  #     tags = {
+  #       Environment = "management"
+  #       Purpose     = "control-plane"
+  #     }
+  #   }
+  # }
 }

@@ -18,9 +18,9 @@ variable "node_groups" {
   description = "map of node groups config"
   default = {
     node_group_one = {
-      desired_capacity = 2
+      desired_capacity = 3
       max_capacity     = 50
-      min_capacity     = 1
+      min_capacity     = 2
 
       instance_type = "t3.medium"
 

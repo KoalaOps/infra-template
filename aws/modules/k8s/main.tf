@@ -22,9 +22,9 @@ module "eks" {
 
       instance_types = ["t3.medium"]
 
-      desired_capacity = 2
+      desired_capacity = 3
       max_capacity     = 50
-      min_capacity     = 1
+      min_capacity     = 2
     }
   }
 

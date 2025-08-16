@@ -53,11 +53,11 @@ terraform {
 
 # Global dependencies configuration
 dependencies {
-  paths = get_terragrunt_dir() != "${get_parent_terragrunt_dir()}/project-services" ? ["../project-services"] : []
+  paths = get_terragrunt_dir() != "${get_parent_terragrunt_dir()}/project-services" ? ["./project-services"] : []
 }
 
 dependency "project-services" {
-  config_path = "../project-services"
+  config_path = "./project-services"
   skip_outputs = true
   
   mock_outputs = {

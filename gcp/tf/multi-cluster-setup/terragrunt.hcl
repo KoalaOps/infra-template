@@ -32,7 +32,8 @@ remote_state {
     project               = local.common_vars.project_id
     location              = local.common_vars.primary_location
     bucket                = local.effective_state_name
-    prefix                  = "${path_relative_to_include()}/terraform.tfstate"
+    prefix                = "${path_relative_to_include()}/terraform.tfstate"
+    skip_bucket_creation  = false
   }
 }
 

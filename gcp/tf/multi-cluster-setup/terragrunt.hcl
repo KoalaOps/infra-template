@@ -32,7 +32,8 @@ remote_state {
     project               = local.common_vars.project_id
     location              = local.common_vars.primary_location
     bucket                = local.effective_state_name
-    prefix                  = "${path_relative_to_include()}/terraform.tfstate"
+    prefix                = "${path_relative_to_include()}/terraform.tfstate"
+    skip_bucket_creation  = false
   }
 }
 
@@ -51,20 +52,5 @@ terraform {
   }
 }
 
-# Global dependencies configuration
-dependencies {
-  paths = get_terragrunt_dir() != "${get_parent_terragrunt_dir()}/project-services" ? ["../project-services"] : []
-}
-
-dependency "project-services" {
-  config_path = "../project-services"
-  skip_outputs = true
-  
-  mock_outputs = {
-    enabled_apis = []
-  }
-  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
-  
-  # Don't create dependency for project-services itself
-  enabled = get_terragrunt_dir() != "${get_parent_terragrunt_dir()}/project-services"
-}
+# Note: Dependencies are defined individually in each module
+# Global dependencies removed to avoid path conflicts in child modules
